@@ -17,7 +17,7 @@ replaces=()
 backup=(etc/arch-efiboot.conf)
 options=()
 changelog=
-source=("arch-efiboot-git::git+https://github.com/pssncp142/arch-efiboot#branch=master")
+source=("arch-efiboot-git::git+https://github.com/pssncp142/arch-efiboot")
 license=('Apache')
 md5sums=('SKIP')
 pkgdesc="Builds bootable UEFI blobs (including kernel, initrd, ucode, cmdline) in /boot directory "
