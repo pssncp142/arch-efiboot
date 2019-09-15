@@ -1,7 +1,18 @@
 #!/bin/bash
 
+#Default parameters
+FORCE=0
+ESP=/boot
+TARGET_ESP=/EFI/Linux
+
 . /etc/arch-efiboot.conf
 
+if ! mount | grep "$ESP " | grep vfat > /dev/null ; then
+	echo $ESP "is not a fat32 filesystem. Check your configuration."
+	if [ $FORCE -eq 0 ] ; then echo "Aborting..."; exit; fi
+fi
+
+# Set environment variables
 TARGET=$ESP/$TARGET_ESP
 BOOTDIR=/boot
 CMDLINE_DIR=$BOOTDIR
