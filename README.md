@@ -37,3 +37,7 @@ When completed, you can use efibootmgr to setup the boot item, or your BIOS sett
 By default, when you run the script, it extract your current kernel command line to /boot/cmdline.txt. Change it and rerun to include the new paramters. If the file exists, it will *not* overwrite it.
 
 It is also possible to have different command lines for different kernels. You can do this by placing cmdline-<kernel name>.txt in your /boot folder, where the <kernel name> is the part after "vmlinuz-" of your kernel. For example for vmlinuz-linux it is cmdline-linux.txt, for vmlinuz-linux-lts it is cmdline-linux-lts.txt.
+  
+## New features in this fork.
+- Include /etc/arch-efiboot.conf (More on options later on)
+- Manipulate os-release for pretty systemd-boot auto entries of EFI executables in <code><i>ESP</i>/EFI/Linux</code>. For example, "Arch Linux (linux-lts-4.19.72-1)". See [here](https://systemd.io/BOOT_LOADER_SPECIFICATION#type-2-efi-unified-kernel-images).
