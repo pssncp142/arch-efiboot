@@ -4,18 +4,18 @@
 
 TARGET=$ESP/$TARGET_ESP
 BOOTDIR=/boot
-CMDLINE_DIR=$BOOTDIR/
+CMDLINE_DIR=$BOOTDIR
 UCODE=$BOOTDIR/intel-ucode.img
 EFISTUB=/usr/lib/systemd/boot/efi/linuxx64.efi.stub
 
-echo $TARGET
+find_kernels () {
 
-echo "Updating EFI kernels..."
+	KERNELS=$(ls /boot/vmlinuz-* | xargs -n1 basename | sed "s/vmlinuz-//")
+	echo "Found kernels : "$KERNELS
 
-for k in $BOOTDIR/vmlinuz*; do
-	NAME=$(basename $k|sed 's/vmlinuz-//')
-	echo "  Building $NAME"
-	INITRD="$BOOTDIR/initramfs-$NAME.img"
+}
+
+add_ucode () {
 
 	if [ -f "$UCODE" ]; then
 		cat "$UCODE" "$INITRD" > /tmp/initrd.bin
@@ -26,8 +26,12 @@ for k in $BOOTDIR/vmlinuz*; do
 		INITRDFILE="$INITRD"
 	fi
 
+}
+
+set_cmdline () {
+
 	# Check for custom command line for the kernel.
-	CMDLINE="$CMDLINE_DIR/cmdline-$NAME.txt"
+	CMDLINE="$CMDLINE_DIR/cmdline-$KERNEL.txt"
 	if [ -f "$CMDLINE" ]; then
 		echo "    Using custom command line $CMDLINE"
 	else
@@ -38,10 +42,30 @@ for k in $BOOTDIR/vmlinuz*; do
 		fi
 	fi
 
+}
+
+make_efi_kernel () {
+
 	objcopy \
 	    --add-section .osrel="/usr/lib/os-release" --change-section-vma .osrel=0x20000 \
 	    --add-section .cmdline="$CMDLINE" --change-section-vma .cmdline=0x30000 \
-	    --add-section .linux="$k" --change-section-vma .linux=0x40000 \
+	    --add-section .linux="$BOOTDIR/vmlinuz-$KERNEL" --change-section-vma .linux=0x40000 \
 	    --add-section .initrd="$INITRDFILE" --change-section-vma .initrd=0x3000000 \
-	    "$EFISTUB" "$TARGET/$NAME.efi"
+	    "$EFISTUB" "$TARGET/$KERNEL.efi"
+
+}
+
+find_kernels
+
+echo "Updating EFI kernels..."
+
+for KERNEL in $KERNELS; do
+
+	echo "  Building $KERNEL"
+	INITRD="$BOOTDIR/initramfs-$KERNEL.img"
+
+	add_ucode
+	set_cmdline
+	make_efi_kernel
+
 done
