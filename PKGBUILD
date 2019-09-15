@@ -1,7 +1,7 @@
 # Maintainer: Yigit Dallilar <yigit.dallilar@gmail.com>
 
 pkgname=arch-efiboot-git
-pkgver=1.0
+pkgver=r12.df9d029
 pkgrel=1
 epoch=
 arch=(any)
@@ -11,21 +11,21 @@ depends=("binutils" "pacman")
 makedepends=()
 checkdepends=()
 optdepends=()
-provides=()
-conflicts=()
-replaces=()
+provides=(arch-efiboot)
+conflicts=(arch-efiboot)
+replaces=(arch-efiboot)
 backup=(etc/arch-efiboot.conf)
 options=()
 changelog=
-source=("arch-efiboot-git::git+https://github.com/pssncp142/arch-efiboot")
+source=("arch-efiboot-git::git+https://github.com/pssncp142/arch-efiboot#branch=master")
 license=('Apache')
 md5sums=('SKIP')
 pkgdesc="Builds bootable UEFI blobs (including kernel, initrd, ucode, cmdline) in /boot directory "
 #install="${pkgname}.install"
 
 pkgver() {
-	cd ${srcdir}/${pkgname}
-	git describe --long --tags | sed 's/^v//;s/\([^-]*-g\)/r\1/;s/-/./g'
+	cd ${pkgname}
+	printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
 }
 
 package () {
