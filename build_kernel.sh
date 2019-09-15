@@ -1,10 +1,14 @@
 #!/bin/bash
 
-TARGET=/boot
+. /etc/arch-efiboot.conf
+
+TARGET=$ESP/$TARGET_ESP
 BOOTDIR=/boot
 CMDLINE_DIR=$BOOTDIR/
 UCODE=$BOOTDIR/intel-ucode.img
 EFISTUB=/usr/lib/systemd/boot/efi/linuxx64.efi.stub
+
+echo $TARGET
 
 echo "Updating EFI kernels..."
 
