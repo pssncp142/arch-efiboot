@@ -41,3 +41,5 @@ It is also possible to have different command lines for different kernels. You c
 ## New features in this fork.
 - Include /etc/arch-efiboot.conf (More on options later on)
 - Manipulate os-release for pretty systemd-boot auto entries of EFI executables in <code><i>ESP</i>/EFI/Linux</code>. For example, "Arch Linux (linux-lts-4.19.72-1)". See [here](https://systemd.io/BOOT_LOADER_SPECIFICATION#type-2-efi-unified-kernel-images).
+- Use `CMDLINE` in configuration file to add default kernel parameters. If there are kernel specific parameters, `CMDLINE_$KERNEL` can also be set. For example, `CMDLINE_LINUX_LTS` can be set in the configuration file for linux-lts kernel and the `CMDLINE_LINUX_LTS` will be appended to the `CMDLINE`.
+- `FALLBACK` can be set to build efi executables from fallback initramfs images.
