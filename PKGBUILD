@@ -1,7 +1,7 @@
 # Maintainer: Yigit Dallilar <yigit.dallilar@gmail.com>
 
 pkgname=arch-efiboot-git
-pkgver=r14.717f2b7
+pkgver=r15.eecc62b
 pkgrel=1
 epoch=
 arch=(any)
