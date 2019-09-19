@@ -42,15 +42,17 @@ It is also possible to have different command lines for different kernels. You c
 - Include /etc/arch-efiboot.conf (More on options later on)
 - Manipulate os-release for pretty systemd-boot auto entries of EFI executables in <code><i>ESP</i>/EFI/Linux</code>. For example, "Arch Linux (linux-lts-4.19.72-1)". See [here](https://systemd.io/BOOT_LOADER_SPECIFICATION#type-2-efi-unified-kernel-images).
 - Use `CMDLINE` in configuration file to add default kernel parameters. If there are kernel specific parameters, `CMDLINE_$KERNEL` can also be set. For example, `CMDLINE_LINUX_LTS` can be set in the configuration file for linux-lts kernel and the `CMDLINE_LINUX_LTS` will be appended to the `CMDLINE`.
-- ~~`FALLBACK` can be set to build efi executables from fallback initramfs images.~~ This is obsolete. Define presets in PRESET= instead. "default" is used for initramfs-linux.img, "fallback" is for initramfs-linux-fallback.img. You may also use custom images like initramfs-linux-dracut.img (presumably generated via dracut), adding "dracut" to PRESETS=. Currently, there is no safety check for this option. The user is responsible for the existence of initramfs images.
+- ~~`FALLBACK` can be set to build efi executables from fallback initramfs images.~~ This is obsolete. Define presets in `PRESETS` instead. "default" is used for initramfs-linux.img, "fallback" is for initramfs-linux-fallback.img. You may also use custom images like initramfs-linux-dracut.img (presumably generated via dracut), adding "dracut" to `PRESETS`. Currently, there is no safety check for this option. The user is responsible for the existence of initramfs images.
 
 ## FAQ
 
-**
-1-  Q: This doesn't work with the error message. What does it mean?
-	/boot is not a fat32 filesystem. Check your configuration.
-	Aborting...
-**
+**Q: This doesn't work with the error message below. What does it mean?**
 
-	A: Since /boot is not a fat32 system, the code assumes that /boot is not a ESP directory and you may not want to store EFI images there. If the assumption is right, simply set ESP= to your ESP (eg., can be /efi or /boot/efi depending on your setup). However, for whatever reason, if you want to store EFI images in /boot, set FORCE= to 1. 
+```
+  /boot is not a fat32 filesystem. Check your configuration.
+  Aborting...
+```
+
+
+A: Since /boot is not a fat32 system, the code assumes that /boot is not your ESP directory and you may not want to store EFI images there. If the assumption is right, simply set `ESP` to your ESP (eg., can be /efi or /boot/efi depending on your setup). However, for whatever reason, if you want to store EFI images in /boot, set `FORCE` to 1. 
 
