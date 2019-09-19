@@ -1,9 +1,12 @@
 #!/bin/bash
 
+# Your ESP. For example, if your ESP partition is /dev/sda, DISK=/dev/sda PART=1
 DISK=/dev/nvme0n1
 PART=1
+
 LABEL="ArchLinux - EFISTUB"
-LOADER=/boot/efi/EFI/Linux/linux-dracut.efi
+# Path to EFI file in your ESP, not the full path!
+LOADER=EFI/Linux/linux-dracut.efi
 
 if efibootmgr | grep "$LABEL"; then
     BOOTNUM=$(efibootmgr -v | grep "$LABEL" | sed 's/Boot\([0-F]*\)\*.*/\1/g')
