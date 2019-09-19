@@ -43,6 +43,7 @@ It is also possible to have different command lines for different kernels. You c
 - Manipulate os-release for pretty systemd-boot auto entries of EFI executables in <code><i>ESP</i>/EFI/Linux</code>. For example, "Arch Linux (linux-lts-4.19.72-1)". See [here](https://systemd.io/BOOT_LOADER_SPECIFICATION#type-2-efi-unified-kernel-images).
 - Use `CMDLINE` in configuration file to add default kernel parameters. If there are kernel specific parameters, `CMDLINE_$KERNEL` can also be set. For example, `CMDLINE_LINUX_LTS` can be set in the configuration file for linux-lts kernel and the `CMDLINE_LINUX_LTS` will be appended to the `CMDLINE`.
 - ~~`FALLBACK` can be set to build efi executables from fallback initramfs images.~~ This is obsolete. Define presets in `PRESETS` instead. "default" is used for initramfs-linux.img, "fallback" is for initramfs-linux-fallback.img. You may also use custom images like initramfs-linux-dracut.img (presumably generated via dracut), adding "dracut" to `PRESETS`. Currently, there is no safety check for this option. The user is responsible for the existence of initramfs images.
+- You may run `add_efistub_entry` to add an entry to UEFI boot manager. However, you need to edit variables in it for your system. 
 
 ## FAQ
 
