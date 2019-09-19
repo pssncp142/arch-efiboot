@@ -4,7 +4,7 @@
 FORCE=0
 ESP=/boot
 TARGET_ESP=/EFI/Linux
-FALLBACK=0
+PRESETS=("default")
 
 . /etc/arch-efiboot.conf
 
@@ -19,8 +19,6 @@ BOOTDIR=/boot
 CMDLINE_DIR=$BOOTDIR
 UCODE=$BOOTDIR/intel-ucode.img
 EFISTUB=/usr/lib/systemd/boot/efi/linuxx64.efi.stub
-
-if [ $FALLBACK -eq 0 ]; then PRESETS=("default"); else PRESETS=("default" "fallback"); fi
 
 OSRELEASE_FILE=/tmp/arch-efiboot/os-release 
 INITRD_FILE=/tmp/arch-efiboot/initrd.bin 
@@ -50,8 +48,11 @@ set_cmdline () {
 
 make_initrd () {
 
-	INITRD="$BOOTDIR/initramfs-$KERNEL.img"
-	[ $PRESET = "fallback" ] && INITRD="$BOOTDIR/initramfs-$KERNEL-fallback.img"
+	if [ $PRESET = "default" ]; then
+		INITRD="$BOOTDIR/initramfs-$KERNEL.img"
+	else
+		INITRD="$BOOTDIR/initramfs-$KERNEL-$PRESET.img"
+	fi
 
 	if [ -f "$UCODE" ]; then
 		cat "$UCODE" "$INITRD" > $INITRD_FILE
@@ -69,16 +70,19 @@ pretty_os_release () {
 	sed -i "s/BUILD_ID=rolling/BUILD_ID=$KERNEL_VERSION/" $OSRELEASE_FILE
 	sed -i "s/ID=arch/ID=$KERNEL/" $OSRELEASE_FILE
 
-	if [ $PRESET = "fallback" ]; then
-		sed -i "s/NAME=\"Arch Linux\"/NAME=\"Arch Linux - Fallback\"/" $OSRELEASE_FILE
+	if [ ! $PRESET = "default" ]; then
+		sed -i "s/NAME=\"Arch Linux\"/NAME=\"Arch Linux - ${PRESET^}\"/" $OSRELEASE_FILE
 	fi
 
 }
 
 make_efi_kernel () {
 
-	local efi_file="$TARGET/$KERNEL.efi"
-	[ $PRESET = "fallback" ] && efi_file="$TARGET/$KERNEL-fallback.efi"
+	if [ $PRESET = "default" ]; then
+		local efi_file="$TARGET/$KERNEL.efi"
+	else
+		local efi_file="$TARGET/$KERNEL-$PRESET.efi"
+	fi
 
 	objcopy \
 	    --add-section .osrel="$OSRELEASE_FILE" --change-section-vma .osrel=0x20000 \
@@ -101,10 +105,10 @@ for KERNEL in ${KERNELS[@]}; do
 
 	for PRESET in ${PRESETS[@]}; do
 
-		if [ $PRESET = "fallback" ]; then 
-			echo "  Building $KERNEL-fallback.efi"
-		else
+		if [ $PRESET = "default" ]; then 
 			echo "  Building $KERNEL.efi"
+		else
+			echo "  Building $KERNEL-$PRESET.efi"
 		fi
 
 		make_initrd
