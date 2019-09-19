@@ -1,7 +1,7 @@
 # Maintainer: Yigit Dallilar <yigit.dallilar@gmail.com>
 
 pkgname=arch-efiboot-git
-pkgver=r15.eecc62b
+pkgver=r23.419921f
 pkgrel=1
 epoch=
 arch=(any)
@@ -24,13 +24,14 @@ pkgdesc="Builds bootable UEFI blobs (including kernel, initrd, ucode, cmdline) i
 #install="${pkgname}.install"
 
 pkgver() {
-	cd ${pkgname}
-	printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+    cd ${pkgname}
+    printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
 }
 
 package () {
-	install -D -m644 ${srcdir}/${pkgname}/etc/arch-efiboot.conf ${pkgdir}/etc/arch-efiboot.conf
+    install -D -m644 ${srcdir}/${pkgname}/etc/arch-efiboot.conf ${pkgdir}/etc/arch-efiboot.conf
     install -D -m755 ${srcdir}/${pkgname}/build_kernel.sh ${pkgdir}/usr/bin/build_efi_kernels
+    install -D -m755 ${srcdir}/${pkgname}/add_efistub_entry.sh ${pkgdir}/usr/bin/add_efistub_entry
     install -D -m644 ${srcdir}/${pkgname}/kernel-update.hook ${pkgdir}/etc/pacman.d/hooks/efi-kernel-update.hook
     sed -i 's/\/opt\/build_kernel\.sh/\/usr\/bin\/build_efi_kernels/' ${pkgdir}/etc/pacman.d/hooks/efi-kernel-update.hook
 }
